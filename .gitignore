@@ -1,0 +1,13 @@
+### Phpstorm project files
+.idea
+
+### Jekyll template
+_site
+.jekyll-cache
+rafts
+/vendor/
+Gemfile.lock_site
+.sass-cache
+.jekyll-metadata
+vendor
+

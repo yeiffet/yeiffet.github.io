@@ -1,0 +1,15 @@
+- name: Home
+  link: /
+  icon: fas fa-home
+- name: WebDev
+  link: /webdev
+  icon: fas fa-code
+- name: GameDev
+  link: /style
+  icon: fas fa-gamepad
+- name: Cacharreo
+  link: /cacharreo
+  icon: fas fa-microchip
+- name: Sobre Mi
+  link: /about
+  icon: fas fa-laugh-wink
