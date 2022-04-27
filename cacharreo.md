@@ -4,8 +4,8 @@ title: Cacharreo
 ---
 <div id="main">
     {% assign category = page.title|downcase %}
-    <h1>Desarrollo web</h1>
-    <h2>Aquí encontraras posts de desarrollo web y paradigmas</h2>
+    <h1>Cacharreo</h1>
+    <h3>También me gusta la electrónica, lo retro y modificaciones. Además de algunos que otros gadgets. Todo eso estará en esta sección</h3>
     <br>
 
     <section>

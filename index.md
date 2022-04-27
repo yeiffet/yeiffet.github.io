@@ -14,7 +14,7 @@ title: Desarrollo web
             <header>
                 <h2><a href="{{ post.url }}">{{ post.title }}</a></h2>
                 <h4>{{post.categories | capitalize}}</h4>
-                <p>Author, Date and etc</p>
+                <p>{{ post.date | date: "%-d %B %Y %X"}}</p>
             </header>
             <p>{{ post.excerpt }}</p>
         </section>

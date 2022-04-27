@@ -1,11 +1,11 @@
 ---
 layout: base
-title: WebDev
+title: GameDev
 ---
 <div id="main">
     {% assign category = page.title | downcase %}
-    <h1>Desarrollo Web</h1>
-    <h3>Aquí encontraras posts de desarrollo web y todo lo relacionado con ello</h3>
+    <h1>Desarrollo Juegos</h1>
+    <h3>Todas las entradas de consejos, tutos y proyectos que llevo en marcha</h3>
     <br>
 
     <section>
