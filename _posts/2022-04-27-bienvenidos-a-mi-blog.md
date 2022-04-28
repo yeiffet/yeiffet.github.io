@@ -1,7 +1,6 @@
 ---
 layout: posts
 title: "Bienvenidos a mi Blog!"
-date: 2016-03-23T10:20:00Z
 category: general
 tag: general
 header-image: /assets/images/youre-welcome.jpg
