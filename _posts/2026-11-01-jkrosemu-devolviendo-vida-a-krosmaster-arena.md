@@ -20,33 +20,31 @@ El servidor un proyecto en **C# sobre .NET 8**, una aplicación de consola que l
 
 - **HAAPI** (puerto 8400) — autenticación falsa de Ankama (como ya no existe, le decimos al cliente "tranquilo, este usuario es válido")
 - **LOBBY** (8100) — login, selección de equipo, matchmaking
-- **MATCH** (8200) — toda la lógica de la partida en sí
+- **MATCH** (8200) - toda la lógica de la partida en sí
 - **COLLECTION** (8300) — colección de figuras del jugador
 
-Para poder hacer funcionar lo más fidedignamente y sin casi modificaciones del cliente original (si no habido más remedio que hacerlas) se usan las DLLs de una librería que tiene el juego
+Para poder hacer funcionar lo más fidedignamente y sin casi modificaciones del cliente original (si, no habido más remedio que hacerlas) se usan las DLLs de una librería que tiene el juego
 para la comunicación con lo cual es **byte-idéntico** al protocolo original, por lo tanto el cliente no se entera de que no es oficial.
 
 Como he dicho anteriormente hay un par de parches mínimos en el cliente, por ejemplo, para que lea un fichero local con direcciones de ip para conectar a cualquier servidor, esté donde esté.
 
 ## ¿En qué punto está?
 
-Resumen rápido del estado actual:
-
 ### Lo que ya funciona end-to-end
 
 - **Partidas multijugador LAN/Online** verificadas entre dos PCs. Me he echado partidas enteras contra mi hijo sin romperse nada relevante.
-- **Partidas vs AI** — hay un bot que juega, mueve, lanza hechizos y compra en celdas demoníacas. No es Deep Blue, pero da la pelea.
+- **Partidas vs AI** hay un bot que juega, mueve, lanza hechizos y compra en celdas demoníacas. No es Deep Blue, pero da la pelea.
 - **Flujo completo de un turno**: tirada de tensión, dados de inspiración, movimiento con dados de placaje/esquiva, lanzamiento de hechizos con dados de crítico/armadura, muerte, robo de GG, etc.
 - **Más de 240 figuras** cargadas desde el catálogo real del cliente, con sus hechizos, poderes, stats, etiquetas de familia…
-- **Invocaciones** (summons) — bombas con su cuenta atrás, trampas que se disparan al pisar, criaturas (mobs) que tienen su propio turno en el timeline…
-- **Recompensas Demoníacas** — la tienda y la mecánica de compra/asignación/activación están cerradas de principio a fin, con placeholders por ahora (los efectos reales de las 60 recompensas las implementaré en las próximas sesiones).
+- **Invocaciones** (summons) bombas con su cuenta atrás, trampas que se disparan al pisar, criaturas (mobs) que tienen su propio turno en el timeline…
+- **Recompensas Demoníacas** la tienda y la mecánica de compra/asignación/activación están cerradas de principio a fin, con placeholders por ahora (los efectos reales de las 60 recompensas las implementaré en las próximas sesiones).
 
 
 
 
 ### Lo que llevo refactorizado
 
-En algún punto el `MatchSession.cs` llegó a tener **4200 líneas** (sí, cuatro mil doscientas) No quería refactorizar hasta tener algo decente funcionando, pero bueno, era un monolito espantoso pero trabajo así y luego lo dejo bien estructurado con lo cual lo partí en 11 servicios bien delimitados:
+En algún punto el un fichero llegó a tener **4200 líneas** (sí, cuatro mil doscientas) No quería refactorizar hasta tener algo decente funcionando, era un monolito espantoso pero trabajo así, luego lo dejo bien estructurado y ordenado como debede ser. Así que lo partí en 11 servicios bien delimitados:
 
 ```
 MatchSession (orquestador, 386 líneas)
@@ -63,7 +61,7 @@ MatchSession (orquestador, 386 líneas)
 ```
 
 Es un refactor por servicios (package-by-feature), de momento no tendrá arquitectura hexagonal, pero deja la casa en orden para seguir metiendo contenido sin volverme loco buscando dónde cada cosa. Por supuesto el objetivo es tener una buena arquitectura.
-Pero no nos pongamos técnicos, seguramente la gente que quiere jugar esto le de completamente igual.
+Pero no nos pongamos técnicos, seguramente la gente que quiere jugar esto le de completamente igual. Lo describo porque en un futuro próximo quiero hacerlo público y open source.
 
 ### Lo último que he añadido
 
@@ -79,19 +77,19 @@ Las últimas sesiones de desarrollo se han ido metiendo **habilidades (poderes) 
 
 Más los poderes de siempre que ya estaban desde el principio (Crítico, Armadura, Placaje, Esquiva, Fuerza, Agilidad, Suerte, Inteligencia, Sabiduría, Resistencias elementales…).
 
-Y bastante **wiring de cartas específicas de champions**: Sfinter Cell con sus 4 Tortugas y mecánica de picker, Caballero Justicia con Escudo de Justicia (intercambio de posición), Anathar con sus combos de daño + empuje/atracción, y un batch de ~9 campeones invocadores (Katar, Moon, Dragosa, Ledrag, Miaubuelo Protector…). Si si, están en el juego...
+Y bastante **wiring de "cartas" específicas de champions**: Sfinter Cell con sus 4 Tortugas y mecánica de picker, Caballero Justicia con Escudo de Justicia (intercambio de posición), Anathar con sus combos de daño + empuje/atracción, y un batch de ~9 campeones invocadores (Katar, Moon, Dragosa, Ledrag, Miaubuelo Protector…). Si si, están en el juego...
 
 ## ¿Qué viene ahora?
 
-El siguiente gran bloque es **implementar los efectos reales de las 60 recompensas demoníacas del juego**. Hoy están todas creadas y asignables, pero la mitad del efecto se queda en placeholder (una Multi-slap "funciona" en el sentido de que la compras, la pones en un Krosmaster y la activas, pero el daño extra que debería dar al siguiente hechizo todavía no está wireado). Son 60 recompensas con mecánicas únicas y claro, estaba del lado del servidor en ankama, con lo cual así que hay que implementarlas todas e irán por tandas:
+El siguiente gran bloque es **implementar los efectos reales de las 60 recompensas demoníacas del juego**. Hoy están todas creadas y asignables, pero la mitad del efecto se queda en placeholder (una Multi-slap "funciona" en el sentido de que la compras, la pones en un Krosmaster y la activas, pero el daño extra que debería dar al siguiente hechizo todavía no está wireado). Son 60 recompensas con mecánicas únicas y claro, estaba del lado del servidor en ankama, así que hay que implementarlas todas una a una. También irán por tandas:
 
-1. BOOSTS (one-shots) — ~17 cartas
+1. BOOSTS (one-shots) — ~17 recompensas
 2. BUFFS (temporales hasta tu siguiente turno) — ~15
 3. EQUIPMENT (permanentes) — ~16
 4. Techniques (modifican el puñetazo) — 8
 
 Y en paralelo, lo que va quedando de poderes bespoke de 1-2 figuras y algunos sistemas que están todavía stub (multi-tablero, trampas estela, mecanismos de desplazamiento…).
 
-Si alguien está metido en el mundillo de Krosmaster y quiere trastear, está todo en [GitHub](https://github.com/Yeiffet/JKrosEmu). Y si eres de los que jugó en su día y lo echas de menos, dentro de poco espero poder decir "oye, descárgate esto y vuelve a jugar". Aún queda camino, pero se avanza.
+Si alguien está metido en el mundillo de Krosmaster y quiere trastear, estará todo en GitHub. Y si eres de los que jugó en su día y lo echas de menos, dentro de poco espero poder decir "oye, descárgate esto y vuelve a jugar". Aún queda camino, pero se avanza.
 
 ¡Hasta la próxima bitácora!
